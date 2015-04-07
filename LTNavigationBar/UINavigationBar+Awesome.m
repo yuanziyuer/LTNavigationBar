@@ -13,46 +13,39 @@
 static char overlayKey;
 static char emptyImageKey;
 
-- (UIView *)overlay
-{
+- (UIView *)overlay {
     return objc_getAssociatedObject(self, &overlayKey);
 }
 
-- (void)setOverlay:(UIView *)overlay
-{
+- (void)setOverlay:(UIView *)overlay {
     objc_setAssociatedObject(self, &overlayKey, overlay, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIImage *)emptyImage
-{
+- (UIImage *)emptyImage {
     return objc_getAssociatedObject(self, &emptyImageKey);
 }
 
-- (void)setEmptyImage:(UIImage *)image
-{
+- (void)setEmptyImage:(UIImage *)image {
     objc_setAssociatedObject(self, &emptyImageKey, image, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)lt_setBackgroundColor:(UIColor *)backgroundColor
-{
+- (void)lt_setBackgroundColor:(UIColor *)backgroundColor {
     if (!self.overlay) {
         [self setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
         [self setShadowImage:[UIImage new]];
         self.overlay = [[UIView alloc] initWithFrame:CGRectMake(0, -20, [UIScreen mainScreen].bounds.size.width, 64)];
         self.overlay.userInteractionEnabled = NO;
-        self.overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        self.overlay.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self insertSubview:self.overlay atIndex:0];
     }
     self.overlay.backgroundColor = backgroundColor;
 }
 
-- (void)lt_setTranslationY:(CGFloat)translationY
-{
+- (void)lt_setTranslationY:(CGFloat)translationY {
     self.transform = CGAffineTransformMakeTranslation(0, translationY);
 }
 
-- (void)lt_setContentAlpha:(CGFloat)alpha
-{
+- (void)lt_setContentAlpha:(CGFloat)alpha {
     if (!self.overlay) {
         [self lt_setBackgroundColor:self.barTintColor];
     }
@@ -65,8 +58,7 @@ static char emptyImageKey;
     }
 }
 
-- (void)setAlpha:(CGFloat)alpha forSubviewsOfView:(UIView *)view
-{
+- (void)setAlpha:(CGFloat)alpha forSubviewsOfView:(UIView *)view {
     for (UIView *subview in view.subviews) {
         if (subview == self.overlay) {
             continue;
@@ -76,13 +68,16 @@ static char emptyImageKey;
     }
 }
 
-- (void)lt_reset
-{
+- (void)lt_reset {
     [self setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
     [self setShadowImage:nil];
 
     [self.overlay removeFromSuperview];
     self.overlay = nil;
+}
+
+- (UIColor *)lt_getBackgroundColor {
+    return self.overlay.backgroundColor;
 }
 
 @end
